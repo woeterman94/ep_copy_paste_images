@@ -3,14 +3,40 @@ const Changeset = require('ep_etherpad-lite/static/js/Changeset');
 
 
 exports.eejsBlock_styles = (hookName, args, cb) => {
+  // eslint-disable-next-line max-len
   args.content += "<link href='../static/plugins/ep_copy_paste_images/static/css/ace.css' rel='stylesheet'>";
   return cb();
 };
 
 exports.eejsBlock_timesliderStyles = (hookName, args, cb) => {
+  // eslint-disable-next-line max-len
   args.content += "<link href='../../static/plugins/ep_copy_paste_images/static/css/ace.css' rel='stylesheet'>";
   args.content += '<style>.control{display:none}</style>';
   return cb();
+};
+
+exports.collectContentImage = (name, context) => {
+	console.log('before',context);
+  const tname = context.tname;
+  const state = context.state;
+  const lineAttributes = state.lineAttributes;
+  if (tname === 'div' || tname === 'p') {
+    delete lineAttributes.img;
+    delete lineAttributes.imgSize;
+  }
+  if (tname === 'img') {
+    lineAttributes.img = `<img src='${context.node.attribs.src}'>  `;
+  }
+  
+  /*
+  if (context.node.parentNode && context.node.parentNode.style.width) {
+    if (context.node.parentNode.style.width === '50%') {
+      lineAttributes.imgSize = 'medium';
+    }
+  }*/
+  console.log('---');
+  console.log('after',context);
+  
 };
 
 
